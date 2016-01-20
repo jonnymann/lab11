@@ -68,7 +68,7 @@ void step(double* const f1, double* const f0,
           const double dt, const double dx,
           const double D, const int N)
 {
-
+  
   double* d=new double[N];
   double* u=new double[N];
   double* l=new double[N];
@@ -77,7 +77,16 @@ void step(double* const f1, double* const f0,
   for(int i=0;i<N;i++) u[i] = - D*dt/(dx*dx);
   for(int i=0;i<N;i++) l[i] = - D*dt/(dx*dx);
 
+  for(int i=0;i<N-1;i++){
+    d[i+1]=d[i+1]-l[i+1]/d[i]*u[i];
+    f0[i+1]=f0[i+1]-l[i+1]/d[i]*f0[i];
+  }
 
+  f1[N-1]=f0[N-1]/d[N-1];
+  for(int i=N-2;i>-1;i--){
+        f1[i]=(f0[i]-u[i]*f1[i+1])/d[i];
+  }
+  
   delete[] d;
   delete[] u;
   delete[] l;
